@@ -158,10 +158,12 @@ different costs to members (the listed costs are per half-hour 'slot'), and
 the guest user's ID is always 0. Include in your output the name of the
 facility, the name of the member formatted as a single column, and the cost.
 Order by descending cost, and do not use any subqueries. */
-SELECT f.name, CONCAT(m.firstname,' ',m.surname) AS membername,
-	CASE WHEN b.memid = 0 THEN (slots * guestcost)
-	ELSE (slots * membercost) END AS cost
-	FROM Bookings AS b
+SELECT b.bookid,
+	   f.name, 
+	   CONCAT(m.firstname,' ',m.surname) AS membername,
+	   CASE WHEN b.memid = 0 THEN (slots * guestcost)
+	   ELSE (slots * membercost) END AS cost
+FROM Bookings AS b
 LEFT JOIN Facilities AS f
 ON b.facid = f.facid
 LEFT JOIN Members AS m
@@ -172,22 +174,53 @@ OR ((slots * guestcost) > 30 AND b.memid = 0))
 ORDER BY cost DESC
 
 
-name	membername	cost	
-Massage Room 2	GUEST GUEST	320.0
-Massage Room 1	GUEST GUEST	160.0
-Massage Room 1	GUEST GUEST	160.0
-Massage Room 1	GUEST GUEST	160.0
-Tennis Court 2	GUEST GUEST	150.0
-Tennis Court 1	GUEST GUEST	75.0
-Tennis Court 1	GUEST GUEST	75.0
-Tennis Court 2	GUEST GUEST	75.0
-Squash Court	GUEST GUEST	70.0
-Massage Room 1	Jemima Farrell	39.6
-Squash Court	GUEST GUEST	35.0
-Squash Court	GUEST GUEST	35.0
+bookid	name	membername	cost	
+2946	Massage Room 2	GUEST GUEST	320.0
+2937	Massage Room 1	GUEST GUEST	160.0
+2940	Massage Room 1	GUEST GUEST	160.0
+2942	Massage Room 1	GUEST GUEST	160.0
+2926	Tennis Court 2	GUEST GUEST	150.0
+2922	Tennis Court 1	GUEST GUEST	75.0
+2920	Tennis Court 1	GUEST GUEST	75.0
+2925	Tennis Court 2	GUEST GUEST	75.0
+2948	Squash Court	GUEST GUEST	70.0
+2941	Massage Room 1	Jemima Farrell	39.6
+2949	Squash Court	GUEST GUEST	35.0
+2951	Squash Court	GUEST GUEST	35.0
 
 /* Q9: This time, produce the same result as in Q8, but using a subquery. */
+SELECT b.bookid,
+		f.name, 
+		CONCAT(m.firstname,' ',m.surname) AS membername,
+		CASE WHEN b.memid = 0 THEN (slots * guestcost)
+    	ELSE (slots * membercost) END AS cost
+FROM Bookings AS b
+LEFT JOIN Facilities AS f
+ON b.facid = f.facid
+LEFT JOIN Members AS m
+ON b.memid = m.memid
+WHERE b.bookid IN (
+    SELECT bookid
+	FROM Bookings AS b
+	LEFT JOIN Facilities AS f
+	ON b.facid = f.facid
+	WHERE b.starttime LIKE "2012-09-14%"
+	AND ((b.memid = 0 AND (slots * guestcost) > 30) OR 	 (b.memid > 0 AND (slots * membercost) > 30)))
+ORDER BY cost DESC
 
+bookid	name	membername	cost	
+2946	Massage Room 2	GUEST GUEST	320.0
+2940	Massage Room 1	GUEST GUEST	160.0
+2942	Massage Room 1	GUEST GUEST	160.0
+2937	Massage Room 1	GUEST GUEST	160.0
+2926	Tennis Court 2	GUEST GUEST	150.0
+2920	Tennis Court 1	GUEST GUEST	75.0
+2925	Tennis Court 2	GUEST GUEST	75.0
+2922	Tennis Court 1	GUEST GUEST	75.0
+2948	Squash Court	GUEST GUEST	70.0
+2941	Massage Room 1	Jemima Farrell	39.6
+2951	Squash Court	GUEST GUEST	35.0
+2949	Squash Court	GUEST GUEST	35.0
 
 /* PART 2: SQLite
 
@@ -198,12 +231,112 @@ QUESTIONS:
 /* Q10: Produce a list of facilities with a total revenue less than 1000.
 The output of facility name and total revenue, sorted by revenue. Remember
 that there's a different cost for guests and members! */
+SELECT f.name, 
+		SUM(CASE WHEN b.memid = 0 THEN (slots * guestcost) 
+		ELSE (slots * membercost) END) AS cost 
+FROM Bookings AS b 
+LEFT JOIN Facilities AS f 
+ON b.facid = f.facid 
+LEFT JOIN Members AS m 
+ON b.memid = m.memid 
+GROUP BY b.facid HAVING cost < 1000
+
+('Table Tennis', 180), ('Snooker Table', 240), ('Pool Table', 270)
 
 /* Q11: Produce a report of members and who recommended them in alphabetic surname,firstname order */
+SELECT (m.surname|| ' '|| m.firstname) AS membername, 
+	   (m2.surname || ' ' ||m2.firstname) AS recommender
+FROM Members AS m 
+LEFT JOIN Members AS m2 
+ON m.recommendedby = m2.memid
+ORDER BY membername
 
+memid	membername	recommender
+15	Bader Florence	Stibbons Ponder
+12	Baker Anne	Stibbons Ponder
+16	Baker Timothy	Farrell Jemima
+8	Boothe Tim	Rownam Tim
+5	Butters Gerald	Smith Darren
+22	Coplin Joan	Baker Timothy
+36	Crumpet Erica	Smith Tracy
+7	Dare Nancy	Joplette Janice
+28	Farrell David	
+13	Farrell Jemima	
+0	GUEST GUEST	
+20	Genting Matthew	Butters Gerald
+35	Hunt John	Purview Millicent
+11	Jones David	Joplette Janice
+26	Jones Douglas	Jones David
+4	Joplette Janice	Smith Darren
+21	Mackenzie Anna	Smith Darren
+10	Owen Charles	Smith Darren
+17	Pinker David	Farrell Jemima
+30	Purview Millicent	Smith Tracy
+3	Rownam Tim	
+27	Rumney Henrietta	Genting Matthew
+24	Sarwin Ramnaresh	Bader Florence
+1	Smith Darren	
+37	Smith Darren	
+14	Smith Jack	Smith Darren
+2	Smith Tracy	
+9	Stibbons Ponder	Tracy Burton
+6	Tracy Burton	
+33	Tupperware Hyacinth	
+29	Worthington-Smyth Henry	Smith Tracy
 
 /* Q12: Find the facilities with their usage by member, but not guests */
+SELECT f.name, SUM(b.slots) AS totalmemberslots
+FROM Facilities AS f
+LEFT JOIN Bookings AS b
+ON f.facid = b.facid
+WHERE b.memid > 0
+GROUP BY f.name
+ORDER BY bookid
 
+name	totalmemberslots
+Table Tennis	794
+Massage Room 1	884
+Snooker Table	860
+Pool Table	856
+Tennis Court 1	957
+Squash Court	418
+Badminton Court	1086
+Tennis Court 2	882
+Massage Room 2	54
 
 /* Q13: Find the facilities usage by month, but not guests */
-
+SELECT f.name, strftime("%Y-%m", b.starttime) AS year_month, SUM(b.slots) AS totalmemberslots
+FROM Facilities AS f
+LEFT JOIN Bookings AS b
+ON f.facid = b.facid
+WHERE b.memid > 0
+GROUP BY f.name, strftime("%Y-%m", b.starttime)
+ORDER BY bookid
+name	year_month	totalmemberslots
+Table Tennis	2012-07	98
+Massage Room 1	2012-07	166
+Snooker Table	2012-07	140
+Pool Table	2012-07	110
+Tennis Court 1	2012-07	201
+Squash Court	2012-07	50
+Badminton Court	2012-07	165
+Tennis Court 2	2012-07	123
+Massage Room 2	2012-07	8
+Tennis Court 1	2012-08	339
+Tennis Court 2	2012-08	345
+Badminton Court	2012-08	414
+Table Tennis	2012-08	296
+Massage Room 1	2012-08	316
+Massage Room 2	2012-08	18
+Squash Court	2012-08	184
+Snooker Table	2012-08	316
+Pool Table	2012-08	303
+Tennis Court 1	2012-09	417
+Tennis Court 2	2012-09	414
+Badminton Court	2012-09	507
+Table Tennis	2012-09	400
+Massage Room 1	2012-09	402
+Massage Room 2	2012-09	28
+Squash Court	2012-09	184
+Snooker Table	2012-09	404
+Pool Table	2012-09	443
