@@ -244,7 +244,8 @@ GROUP BY b.facid HAVING cost < 1000
 ('Table Tennis', 180), ('Snooker Table', 240), ('Pool Table', 270)
 
 /* Q11: Produce a report of members and who recommended them in alphabetic surname,firstname order */
-SELECT (m.surname|| ' '|| m.firstname) AS membername, 
+SELECT m.memid, 
+	   (m.surname|| ' '|| m.firstname) AS membername, 
 	   (m2.surname || ' ' ||m2.firstname) AS recommender
 FROM Members AS m 
 LEFT JOIN Members AS m2 
@@ -312,6 +313,7 @@ ON f.facid = b.facid
 WHERE b.memid > 0
 GROUP BY f.name, strftime("%Y-%m", b.starttime)
 ORDER BY bookid
+
 name	year_month	totalmemberslots
 Table Tennis	2012-07	98
 Massage Room 1	2012-07	166
