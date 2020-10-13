@@ -3,3 +3,5 @@ Unit 4 Challenge - Tier 1.ipynb
 Unit 4 Challenge - Tier 2.ipynb
 .vscode
 env/
+.gitignore
+Springboard.code-workspace
