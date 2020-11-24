@@ -4,8 +4,8 @@ import scrapy
 class NFLSpider(scrapy.Spider):
     name = "nfl"
     start_urls = [
-        'https://www.pro-football-reference.com/teams/sea/1998.htm,
-        ]
+        'https://www.pro-football-reference.com/teams/sea/1998.htm'
+    ]
 
     def parse(self, response):
         for quote in response.css('div.quote'):
