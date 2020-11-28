@@ -47,7 +47,7 @@ class NFLSpider(scrapy.Spider):
             # 'SRS': SRS, 'SRS_Off': SRS_Off, 'SRS_Def': SRS_Def}
             # year_meta.update(Team_meta)
             # , meta=year_meta)
-            yield response.follow(url=yearurl, callback=self.parse_year)
+            yield response.follow(url=yearurl, callback=self.parse_year, meta=Team_meta)
 
     def parse_year(self, response):
         year_meta = response.request.meta
