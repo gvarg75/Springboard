@@ -4,5 +4,7 @@
 			"path": "."
 		}
 	],
-	"settings": {}
+	"settings": {
+		"python.pythonPath": "/opt/anaconda3/envs/Guided_capstone/bin/python"
+	}
 }
