@@ -62,7 +62,7 @@ class NFLSpider(scrapy.Spider):
         year_meta = dict(
             [(key, val) for key, val in full_year_meta.items() if key not in rem_list])
         Game_table = response.xpath("//table[@id='games']/tbody/tr")
-        for game in Game_table[0:2]:
+        for game in Game_table:
             if game.xpath(".//td[@data-stat='opp']//text()").get() == 'Bye Week' or game.xpath(".//td[@data-stat='game_date']//text()").get() == 'Playoffs':
                 pass
             else:

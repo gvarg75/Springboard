@@ -70,6 +70,8 @@ class SavestatsPipeline(object):
         coachingstaff.Def_Align = item['Def_Align']
         coachingstaff.Team_PF = item['Team_PF']"""
 
+        weeks.Team = item['Team']
+        weeks.Year = item['Year']
         weeks.Week = item['Week']
         weeks.Week_Opp = item['Week_Opp']
         weeks.Week_Points_Scored = item['Week_Points_Scored']

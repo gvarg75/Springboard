@@ -1,5 +1,5 @@
 from sqlalchemy import create_engine, Column, Table, ForeignKey, MetaData
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship, backref
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
     Integer, String, Date, DateTime, Float, Boolean, Text)
@@ -37,24 +37,23 @@ class TeamYearSummary(Base):
         'team', 'year', sqlite_on_conflict='IGNORE'),)
     id = Column(Integer, primary_key=True)
     team = Column('team', String(35))
-    year = year = Column('year', Integer)
+    year = Column('year', Integer)
     coach = Column('coach', String(35))
     offcoor = Column('offcoor', String(35))
     defcoor = Column('defcoor', String(35))
     offscheme = Column('offscheme', String(35))
     defalign = Column('defalign', String(35))
-    week_child = relationship('Weeks', backref="teamyearsummary")
 
 
 class Weeks(Base):
     __tablename__ = 'weeks'
-    __table_args__ = (UniqueConstraint('teamyearsummary_id',
-                                       'Week', sqlite_on_conflict='IGNORE'),)
+    __table_args__ = (UniqueConstraint(
+                                       'Team','Year', 'Week', sqlite_on_conflict='IGNORE'),)
     id = Column(Integer, primary_key=True)
-    teamyearsummary_id = Column(Integer, ForeignKey(
-        "teamyearsummary.id"))
+    Team = Column('Team', String(35))
+    Year = Column('Year', Integer) 
     Week = Column('Week', Integer)
-    WeekOpp = ('Week_Opp', String(35), ForeignKey('team.name'))
+    WeekOpp = ('Week_Opp', String(35))
     Week_Points_Scored = Column('Week_Points_Scored', Integer)
     Week_Points_Allowed = Column('Week_Points_Allowed', Integer)
     Week_First_Downs = Column('Week_First_Downs', Integer)
