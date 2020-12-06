@@ -8,7 +8,7 @@
 from sqlalchemy.orm import sessionmaker
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
-from .models import db_connect, create_table, Year, Team, Coachingstaff, Summary, Weeks, Player
+from .models import db_connect, create_table, TeamYearSummary, Weeks
 import logging
 
 
@@ -41,25 +41,34 @@ class SavestatsPipeline(object):
         This method is called for every item pipeline component
         """
         session = self.Session()
-        team = Team()
-        year = Year()
-        coachingstaff = Coachingstaff()
-        summary = Summary()
+        teamyearsummary = TeamYearSummary()
+        #team = Team()
+        #year = Year()
+        #coachingstaff = Coachingstaff()
+        #summary = Summary()
         weeks = Weeks()
-        player = Player()
+        #player = Player()
         #draft = Draft()
 
-        team.name = item['Team']
+        teamyearsummary.team = item['Team']
+        teamyearsummary.year = item['Year']
+        teamyearsummary.coach = item['Coach']
+        teamyearsummary.offcoor = item['Off_Coor']
+        teamyearsummary.defcoor = item['Def_Coor']
+        teamyearsummary.offscheme = item['Off_Scheme']
+        teamyearsummary.defalign = item['Def_Align']
+        #team.name = item['Team']
+        #year.year = item['Year']
 
-        year.year = item['Year']
+        #year.year = item['Year']
         #year.year = item['Draft_Year']
 
-        coachingstaff.Coach = item['Coach']
+        """coachingstaff.Coach = item['Coach']
         coachingstaff.Off_Coor = item['Off_Coor']
         coachingstaff.Def_Coor = item['Def_Coor']
         coachingstaff.Off_Scheme = item['Off_Scheme']
         coachingstaff.Def_Align = item['Def_Align']
-        coachingstaff.Team_PF = item['Team_PF']
+        coachingstaff.Team_PF = item['Team_PF']"""
 
         weeks.Week = item['Week']
         weeks.Week_Opp = item['Week_Opp']
@@ -82,7 +91,7 @@ class SavestatsPipeline(object):
         #starters.Starting_Player_Yrs = item['Starting_Player_Yrs']
         #starters.Starting_Player_GS = item['Starting_Player_GS']
 
-        summary.Wins = item['Wins']
+        """summary.Wins = item['Wins']
         summary.Losses = item['Losses']
         summary.MoV = item['MoV']
         summary.SoS = item['SoS']
@@ -141,13 +150,13 @@ class SavestatsPipeline(object):
         player.Position = item['Starting_Position']
         #player.name = item['Draft_Player']
         #player.Position = item['Draft_Position']
-        player.age = item['Starting_Player_Age']
+        player.age = item['Starting_Player_Age']"""
 
-        """exist_team = session.query(Team).filter_by(name=team.name).first()
+        """exist_year = session.query(Year).filter_by(year=year.year).first()
         if exist_team is not None:
-            team.name = exist_team
+            team.year = exist_team
         else:
-            team.name = team.name
+            team.year = year
 
         exist_ = session.query().filter_by().Opp_First_down
         if exist_ is not None:
@@ -160,8 +169,8 @@ class SavestatsPipeline(object):
         else:"""
 
         try:
-            session.add_all(
-                [team, year, coachingstaff, summary, weeks, player])
+            session.add_all([teamyearsummary, weeks])
+
             session.commit()
 
         except:

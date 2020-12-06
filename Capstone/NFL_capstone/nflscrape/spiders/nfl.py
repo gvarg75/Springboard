@@ -18,8 +18,7 @@ class NFLSpider(scrapy.Spider):
         rows = response.xpath(
             "//table[@id='teams_active']/tbody//tr/th[@class='left ']")
         Team_meta = {}
-        # for row in rows:
-        for row in rows[1:2]:
+        for row in rows[0:2]:
             url = row.xpath("./a/@href").get()
             Team_meta['Team'] = row.xpath(
                 ".//text()").get()
@@ -34,8 +33,7 @@ class NFLSpider(scrapy.Spider):
         Team_meta = dict(
             [(key, val) for key, val in full_Team_meta.items() if key not in rem_list])
         rows = response.xpath("//table[@id='team_index']//tbody/tr")
-        # for row in rows[1:19]:
-        for row in rows[1:2]:
+        for row in rows[1:3]:
             yearurl = row.xpath(
                 ".//th[@data-stat='year_id']/a/@href").get()
             Team_meta['Year'] = row.xpath(
@@ -64,7 +62,7 @@ class NFLSpider(scrapy.Spider):
         year_meta = dict(
             [(key, val) for key, val in full_year_meta.items() if key not in rem_list])
         Game_table = response.xpath("//table[@id='games']/tbody/tr")
-        for game in Game_table[0:1]:
+        for game in Game_table[0:2]:
             if game.xpath(".//td[@data-stat='opp']//text()").get() == 'Bye Week' or game.xpath(".//td[@data-stat='game_date']//text()").get() == 'Playoffs':
                 pass
             else:

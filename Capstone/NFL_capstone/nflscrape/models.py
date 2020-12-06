@@ -4,7 +4,7 @@ from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy import (
     Integer, String, Date, DateTime, Float, Boolean, Text)
 from scrapy.utils.project import get_project_settings
-from sqlalchemy.sql.schema import UniqueConstraint
+from sqlalchemy.sql.schema import ForeignKeyConstraint, UniqueConstraint
 
 Base = declarative_base()
 
@@ -22,30 +22,74 @@ def create_table(engine):
 
 
 # Association tables
-starter_table = Table('Starter', Base.metadata,
-                      Column('year_id', String(35), ForeignKey('year.id')),
-                      Column('player_id', Integer, ForeignKey('player.id'))
-                      )
+# starter_table = Table('Starter', Base.metadata,
+ #                     Column('year_id', String(35), ForeignKey('year.id')),
+  #                    Column('player_id', Integer, ForeignKey('player.id'))
+   #                   )
+
+# team_year_table = Table('team_year', Base.metadata,
+#                        Column('team_id', Integer, ForeignKey('team.id')),
+#                        Column('year_id', Integer, ForeignKey('year.id')))
+
+class TeamYearSummary(Base):
+    __tablename__ = 'teamyearsummary'
+    __table_args__ = (UniqueConstraint(
+        'team', 'year', sqlite_on_conflict='IGNORE'),)
+    id = Column(Integer, primary_key=True)
+    team = Column('team', String(35))
+    year = year = Column('year', Integer)
+    coach = Column('coach', String(35))
+    offcoor = Column('offcoor', String(35))
+    defcoor = Column('defcoor', String(35))
+    offscheme = Column('offscheme', String(35))
+    defalign = Column('defalign', String(35))
+    week_child = relationship('Weeks', backref="teamyearsummary")
 
 
-class Team(Base):
+class Weeks(Base):
+    __tablename__ = 'weeks'
+    __table_args__ = (UniqueConstraint('teamyearsummary_id',
+                                       'Week', sqlite_on_conflict='IGNORE'),)
+    id = Column(Integer, primary_key=True)
+    teamyearsummary_id = Column(Integer, ForeignKey(
+        "teamyearsummary.id"))
+    Week = Column('Week', Integer)
+    WeekOpp = ('Week_Opp', String(35), ForeignKey('team.name'))
+    Week_Points_Scored = Column('Week_Points_Scored', Integer)
+    Week_Points_Allowed = Column('Week_Points_Allowed', Integer)
+    Week_First_Downs = Column('Week_First_Downs', Integer)
+    Week_Total_Off_Yards = Column('Week_Total_Off_Yards', Integer)
+    Week_Pass_Yards = Column('Week_Pass_Yards', Integer)
+    Week_Rush_Yards = Column('Week_Rush_Yards', Integer)
+    Week_Off_Turnovers = Column('Week_Off_Turnovers', Integer)
+    Week_Def_First_Downs = Column('Week_Def_First_Downs', Integer)
+    Week_Def_Total_Yards = Column('Week_Def_Total_Yards', Integer)
+    Week_Def_Pass_Yards = Column('Week_Def_Pass_Yards', Integer)
+    Week_Def_Rush_Yards = Column('Week_Def_Rush_Yards', Integer)
+    Week_Def_Turnovers = Column('Week_Def_Turnovers', Integer)
+
+
+"""class Team(Base):
     __tablename__ = 'team'
+    #__table_args__ = (UniqueConstraint('name', sqlite_on_conflict='IGNORE'),)
+    id = Column('id', Integer, primary_key=True)
+    name = Column('name', String(35), unique=True,)
+    year_child = relationship(
+        "Year", secondary=team_year_table, backref="team_parent")
+    UniqueConstraint('')"""
 
-    id = Column(Integer, primary_key=True)
-    name = Column(String(35))
-    year_child = relationship("Year", backref="team")
 
-
-class Year(Base):
+"""class Year(Base):
     __tablename__ = 'year'
-    id = Column(Integer, primary_key=True)
-    year = Column(Integer)
+    __table_args__ = (UniqueConstraint('year', sqlite_on_conflict='IGNORE'),)
+    id = Column('id', Integer, primary_key=True)
+    year = Column('year', Integer, unique=True)
     team_id = Column(Integer, ForeignKey('team.id'))
-    coaching_staff_child = relationship("Coachingstaff", backref="year")
-    #draft = relationship('Draft')
+    #coaching_staff_child = relationship("Coachingstaff", backref="year")
+    # draft = relationship('Draft')"""
 
 
-class Coachingstaff(Base):
+"""class Coachingstaff(Base):
     __tablename__ = 'coachingstaff'
     id = Column(Integer, primary_key=True)
     year_id = Column(Integer, ForeignKey('year.id'))
@@ -107,39 +151,19 @@ class Summary(Base):
     Opp_Rush_Tds = Column('Opp_Rush_Tds', Integer)
     Opp_Rush_Yds_Att = Column('Opp_Rush_Yds_Att', Integer)
     Opp_Rush_First_Down = Column('Opp_Rush_First_Down', Integer)
-    weeks = relationship("Weeks", backref="summary")
+    weeks = relationship("Weeks", backref="summary")"""
 
 
-class Weeks(Base):
-    __tablename__ = 'weeks'
-    id = Column(Integer, primary_key=True)
-    summary_id = Column(Integer, ForeignKey('summary.id'))
-    Week = Column('Week', Integer)
-    WeekOpp = ('Week_Opp', String(35), ForeignKey('team.name'))
-    Week_Points_Scored = Column('Week_Points_Scored', Integer)
-    Week_Points_Allowed = Column('Week_Points_Allowed', Integer)
-    Week_First_Downs = Column('Week_First_Downs', Integer)
-    Week_Total_Off_Yards = Column('Week_Total_Off_Yards', Integer)
-    Week_Pass_Yards = Column('Week_Pass_Yards', Integer)
-    Week_Rush_Yards = Column('Week_Rush_Yards', Integer)
-    Week_Off_Turnovers = Column('Week_Off_Turnovers', Integer)
-    Week_Def_First_Downs = Column('Week_Def_First_Downs', Integer)
-    Week_Def_Total_Yards = Column('Week_Def_Total_Yards', Integer)
-    Week_Def_Pass_Yards = Column('Week_Def_Pass_Yards', Integer)
-    Week_Def_Rush_Yards = Column('Week_Def_Rush_Yards', Integer)
-    Week_Def_Turnovers = Column('Week_Def_Turnovers', Integer)
-
-
-class Player(Base):
+"""class Player(Base):
     __tablename__ = 'player'
     id = Column(Integer, primary_key=True)
     Name = Column('Player', String(50))
     Age = Column('Starting_Player_Age', Integer)
     Position = Column('Position', String(50))
-    #draft = relationship("Draft")
+    # draft = relationship("Draft")
 
 
-'''class Draft(Base):
+class Draft(Base):
     __tablename__ = 'draft'
     id = Column(Integer, primary_key=True)
     year_id = Column(Integer, ForeignKey('year.id'))
@@ -149,4 +173,4 @@ class Player(Base):
     Draft_Position = Column('Draft_Position', String(35))
     Draft_School = Column('Draft_School', String(35))
     Draft_Team_Selection = Column('Draft_Team_Selection', Integer)
-    Draft_Team = Column('Draft_Team', String(35))'''
+    Draft_Team = Column('Draft_Team', String(35))"""
