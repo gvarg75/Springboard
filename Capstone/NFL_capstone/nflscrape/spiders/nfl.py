@@ -18,7 +18,7 @@ class NFLSpider(scrapy.Spider):
         rows = response.xpath(
             "//table[@id='teams_active']/tbody//tr/th[@class='left ']")
         Team_meta = {}
-        for row in rows[0:2]:
+        for row in rows:
             url = row.xpath("./a/@href").get()
             Team_meta['Team'] = row.xpath(
                 ".//text()").get()
@@ -33,7 +33,7 @@ class NFLSpider(scrapy.Spider):
         Team_meta = dict(
             [(key, val) for key, val in full_Team_meta.items() if key not in rem_list])
         rows = response.xpath("//table[@id='team_index']//tbody/tr")
-        for row in rows[1:3]:
+        for row in rows[1:19]:
             yearurl = row.xpath(
                 ".//th[@data-stat='year_id']/a/@href").get()
             Team_meta['Year'] = row.xpath(
@@ -56,6 +56,7 @@ class NFLSpider(scrapy.Spider):
             yield response.follow(url=yearurl, callback=self.parse_year, meta=Team_meta)
 
     def parse_year(self, response):
+        item = NflscrapeItem()
         full_year_meta = response.request.meta
         rem_list = ['depth', 'download_timeout',
                     'download_slot', 'download_latency']
@@ -189,8 +190,75 @@ class NFLSpider(scrapy.Spider):
                     "//*[@id='team_stats']//tr[2]//td[19]//text()").get()
                 roster_url = response.xpath(
                     "//a[contains(text(), 'Starters & Roster')]/@href").get()
+                item['Team'] = year_meta['Team']
+                item['Year'] = year_meta['Year']
+                item['Wins'] = year_meta['Wins']
+                item['Losses'] = year_meta['Losses']
+                item['MoV'] = year_meta['MoV']
+                item['SoS'] = year_meta['SoS']
+                item['SRS'] = year_meta['SRS']
+                item['SRS_Off'] = year_meta['SRS_Off']
+                item['SRS_Def'] = year_meta['SRS_Def']
+                item['Coach'] = year_meta['Coach']
+                item['Off_Coor'] = year_meta['Off_Coor']
+                item['Def_Coor'] = year_meta['Def_Coor']
+                item['Off_Scheme'] = year_meta['Off_Scheme']
+                item['Def_Align'] = year_meta['Def_Align']
+                item['Team_PF'] = year_meta['Team_PF']
+                item['Team_Total_Yards'] = year_meta['Team_Total_Yards']
+                item['Team_Plays_Offense'] = year_meta['Team_Plays_Offense']
+                item['Team_yds_per_play_offense'] = year_meta['Team_yds_per_play_offense']
+                item['Team_Turnovers'] = year_meta['Team_Turnovers']
+                item['Team_Fumbles'] = year_meta['Team_Fumbles']
+                item['Team_First_down'] = year_meta['Team_First_down']
+                item['Team_Pass_Comp'] = year_meta['Team_Pass_Comp']
+                item['Team_Pass_Att'] = year_meta['Team_Pass_Att']
+                item['Team_Pass_Yds'] = year_meta['Team_Pass_Yds']
+                item['Team_Pass_Td'] = year_meta['Team_Pass_Td']
+                item['Team_Pass_Int'] = year_meta['Team_Pass_Int']
+                item['Team_Pass_Net_Yds_Att'] = year_meta['Team_Pass_Net_Yds_Att']
+                item['Team_Pass_First_Down'] = year_meta['Team_Pass_First_Down']
+                item['Team_Rush_Att'] = year_meta['Team_Rush_Att']
+                item['Team_Rush_Yds'] = year_meta['Team_Rush_Yds']
+                item['Team_Rush_Tds'] = year_meta['Team_Rush_Tds']
+                item['Team_Rush_Yds_Att'] = year_meta['Team_Rush_Yds_Att']
+                item['Team_Rush_First_Down'] = year_meta['Team_Rush_First_Down']
+                item['Opp_PF'] = year_meta['Opp_PF']
+                item['Opp_Total_Yards'] = year_meta['Opp_Total_Yards']
+                item['Opp_Plays_Offense'] = year_meta['Opp_Plays_Offense']
+                item['Opp_yds_per_play_offense'] = year_meta['Opp_yds_per_play_offense']
+                item['Opp_Turnovers'] = year_meta['Opp_Turnovers']
+                item['Opp_Fumbles'] = year_meta['Opp_Fumbles']
+                item['Opp_First_down'] = year_meta['Opp_First_down']
+                item['Opp_Pass_Comp'] = year_meta['Opp_Pass_Comp']
+                item['Opp_Pass_Att'] = year_meta['Opp_Pass_Att']
+                item['Opp_Pass_Yds'] = year_meta['Opp_Pass_Yds']
+                item['Opp_Pass_Td'] = year_meta['Opp_Pass_Td']
+                item['Opp_Pass_Int'] = year_meta['Opp_Pass_Int']
+                item['Opp_Pass_Net_Yds_Att'] = year_meta['Opp_Pass_Net_Yds_Att']
+                item['Opp_Pass_First_Down'] = year_meta['Opp_Pass_First_Down']
+                item['Opp_Rush_Att'] = year_meta['Opp_Rush_Att']
+                item['Opp_Rush_Yds'] = year_meta['Opp_Rush_Yds']
+                item['Opp_Rush_Tds'] = year_meta['Opp_Rush_Tds']
+                item['Opp_Rush_Yds_Att'] = year_meta['Opp_Rush_Yds_Att']
+                item['Opp_Rush_First_Down'] = year_meta['Opp_Rush_First_Down']
+                item['Week'] = year_meta['Week']
+                item['Week_Opp'] = year_meta['Week_Opp']
+                item['Week_Points_Scored'] = year_meta['Week_Points_Scored']
+                item['Week_Points_Allowed'] = year_meta['Week_Points_Allowed']
+                item['Week_First_Downs'] = year_meta['Week_First_Downs']
+                item['Week_Total_Off_Yards'] = year_meta['Week_Total_Off_Yards']
+                item['Week_Pass_Yards'] = year_meta['Week_Pass_Yards']
+                item['Week_Rush_Yards'] = year_meta['Week_Rush_Yards']
+                item['Week_Off_Turnovers'] = year_meta['Week_Off_Turnovers']
+                item['Week_Def_First_Downs'] = year_meta['Week_Def_First_Downs']
+                item['Week_Def_Total_Yards'] = year_meta['Week_Def_Total_Yards']
+                item['Week_Def_Pass_Yards'] = year_meta['Week_Def_Pass_Yards']
+                item['Week_Def_Rush_Yards'] = year_meta['Week_Def_Rush_Yards']
+                item['Week_Def_Turnovers'] = year_meta['Week_Def_Turnovers']
+                yield item
 
-        yield response.follow(url=roster_url, callback=self.parse_roster, meta=year_meta, dont_filter=True)
+        """yield response.follow(url=roster_url, callback=self.parse_roster, meta=year_meta, dont_filter=True)
 
     def parse_roster(self, response):
         item = NflscrapeItem()
@@ -300,4 +368,4 @@ class NFLSpider(scrapy.Spider):
                 item['Starting_Player_Age'] = roster_meta['Starting_Player_Age']
                 item['Starting_Player_Yrs'] = roster_meta['Starting_Player_Yrs']
                 item['Starting_Player_GS'] = roster_meta['Starting_Player_GS']
-            yield item
+            yield item"""

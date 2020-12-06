@@ -48,11 +48,11 @@ class TeamYearSummary(Base):
 class Weeks(Base):
     __tablename__ = 'weeks'
     __table_args__ = (UniqueConstraint(
-                                       'Team','Year', 'Week', sqlite_on_conflict='IGNORE'),)
+        'Team', 'Year', 'Week', sqlite_on_conflict='IGNORE'),)
     id = Column(Integer, primary_key=True)
     Team = Column('Team', String(35))
-    Year = Column('Year', Integer) 
-    Week = Column('Week', Integer)
+    Year = Column('Year', Integer)
+    Week = Column('Week', String(35))
     WeekOpp = ('Week_Opp', String(35))
     Week_Points_Scored = Column('Week_Points_Scored', Integer)
     Week_Points_Allowed = Column('Week_Points_Allowed', Integer)
