@@ -43,24 +43,62 @@ class TeamYearSummary(Base):
     defcoor = Column('defcoor', String(35))
     offscheme = Column('offscheme', String(35))
     defalign = Column('defalign', String(35))
+    """Wins = Column('Wins', Integer)
+    Losses = Column('Losses', Integer)
+    MoV = Column('MoV', Integer)
+    SoS = Column('SoS', Float)
+    SRS = Column('SRS', Float)
+    SRS_Off = Column('SRS_Off', Float)
+    SRS_Def = Column('SRS_Def', Float)
+    Team_PF = Column('Team_PF', Integer)
+    Team_Total_Yards = Column('Team_Total_Yards', Integer)
+    Team_Plays_Offense = Column('Team_Plays_Offense', Integer)
+    Team_yds_per_play_offense = Column('Team_yds_per_play_offense', Float)
+    Team_Turnovers = Column('Team_Turnovers', Integer)
+    Team_Fumbles = Column('Team_Fumbles', Integer)
+    Team_First_down = Column('Team_First_down', Integer)
+    Team_Pass_Comp = Column('Team_Pass_Comp', Integer)
+    Team_Pass_Att = Column('Team_Pass_Att', Integer)
+    Team_Pass_Yds = Column('Team_Pass_Yds', Integer)
+    Team_Pass_Td = Column('Team_Pass_Td', Integer)
+    Team_Pass_Int = Column('Team_Pass_Int', Integer)
+    Team_Pass_Net_Yds_Att = Column('Team_Pass_Net_Yds_Att', Integer)
+    Team_Pass_First_Down = Column('Team_Pass_First_Down', Integer)
+    Team_Rush_Att = Column('Team_Rush_Att', Integer)
+    Team_Rush_Yds = Column('Team_Rush_Yds', Integer)
+    Team_Rush_Tds = Column('Team_Rush_Tds', Integer)
+    Team_Rush_Yds_Att = Column('Team_Rush_Yds_Att', Integer)
+    Team_Rush_First_Down = Column('Team_Rush_First_Down', Integer)
+
+    Opp_PF = Column('Opp_PF', Integer)
+    Opp_Total_Yards = Column('Opp_Total_Yards', Integer)
+    Opp_Plays_Offense = Column('Opp_Plays_Offense', Integer)
+    Opp_yds_per_play_offense = Column('Opp_yds_per_play_offense', Integer)
+    Opp_Turnovers = Column('Opp_Turnovers', Integer)
+    Opp_Fumbles = Column('Opp_Fumbles', Integer)
+    Opp_First_down = Column('Opp_First_down', Integer)
+    Opp_Pass_Comp = Column('Opp_Pass_Comp', Integer)
+    Opp_Pass_Att = Column('Opp_Pass_Att', Integer)
+    Opp_Pass_Yds = Column('Opp_Pass_Yds', Integer)
+    Opp_Pass_Td = Column('Opp_Pass_Td', Integer)
+    Opp_Pass_Int = Column('Opp_Pass_Int', Integer)
+    Opp_Pass_Net_Yds_Att = Column('Opp_Pass_Net_Yds_Att', Integer)
+    Opp_Pass_First_Down = Column('Opp_Pass_First_Down', Integer)
+    Opp_Rush_Att = Column('Opp_Rush_Att', Integer)
+    Opp_Rush_Yds = Column('Opp_Rush_Yds', Integer)
+    Opp_Rush_Tds = Column('Opp_Rush_Tds', Integer)
+    Opp_Rush_Yds_Att = Column('Opp_Rush_Yds_Att', Integer)
+    Opp_Rush_First_Down = Column('Opp_Rush_First_Down', Integer)"""
 
 
 class Weeks(Base):
     __tablename__ = 'weeks'
     __table_args__ = (UniqueConstraint(
-<<<<<<< HEAD
         'Team', 'Year', 'Week', sqlite_on_conflict='IGNORE'),)
     id = Column(Integer, primary_key=True)
     Team = Column('Team', String(35))
     Year = Column('Year', Integer)
     Week = Column('Week', String(35))
-=======
-                                       'Team','Year', 'Week', sqlite_on_conflict='IGNORE'),)
-    id = Column(Integer, primary_key=True)
-    Team = Column('Team', String(35))
-    Year = Column('Year', Integer) 
-    Week = Column('Week', Integer)
->>>>>>> db0a18667dd76bc09a3530fcecd9fe949fa5a671
     WeekOpp = ('Week_Opp', String(35))
     Week_Points_Scored = Column('Week_Points_Scored', Integer)
     Week_Points_Allowed = Column('Week_Points_Allowed', Integer)
@@ -163,14 +201,34 @@ class Summary(Base):
 
 """class Player(Base):
     __tablename__ = 'player'
+    __table_args__ = (UniqueConstraint(
+        'Team', 'Year', 'Player', sqlite_on_conflict='IGNORE'),)
     id = Column(Integer, primary_key=True)
-    Name = Column('Player', String(50))
+    Team = Column('Team', String(35))
+    Year = Column('Year', Integer)
+    Player = Column('Player', String(50))
     Age = Column('Starting_Player_Age', Integer)
     Position = Column('Position', String(50))
-    # draft = relationship("Draft")
+    PlayerYrs = Column('PlayerYrs', Integer)
+    GameStarts = Column('GameStarts', Integer)
+    # draft = relationship("Draft")"""
 
 
-class Draft(Base):
+class Starters(Base):
+    __tablename__ = 'starters'
+    __table_args__ = (UniqueConstraint(
+        'Team', 'Year', 'StartingPlayer', sqlite_on_conflict='IGNORE'),)
+    id = Column(Integer, primary_key=True)
+    Team = Column('Team', String(35))
+    Year = Column('Year', Integer)
+    StartingPlayer = Column('StartingPlayer', String(50))
+    StartingPlayerAge = Column('StartingPlayerAge', Integer)
+    StartingPosition = Column('StartingPosition', String(50))
+    StartingPlayerYrs = Column('StartingPlayerYrs', Integer)
+    StartingPlayerGS = Column('StartingPlayerGS', Integer)
+
+
+"""class Draft(Base):
     __tablename__ = 'draft'
     id = Column(Integer, primary_key=True)
     year_id = Column(Integer, ForeignKey('year.id'))

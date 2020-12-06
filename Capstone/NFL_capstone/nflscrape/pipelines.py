@@ -8,7 +8,7 @@
 from sqlalchemy.orm import sessionmaker
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
-from .models import db_connect, create_table, TeamYearSummary, Weeks
+from .models import db_connect, create_table, TeamYearSummary, Weeks, Starters
 import logging
 
 
@@ -48,6 +48,7 @@ class SavestatsPipeline(object):
         #summary = Summary()
         weeks = Weeks()
         #player = Player()
+        starters = Starters()
         #draft = Draft()
 
         teamyearsummary.team = item['Team']
@@ -57,11 +58,56 @@ class SavestatsPipeline(object):
         teamyearsummary.defcoor = item['Def_Coor']
         teamyearsummary.offscheme = item['Off_Scheme']
         teamyearsummary.defalign = item['Def_Align']
+        """teamyearsummary.Wins = item['Wins']
+        teamyearsummary.Losses = item['Losses']
+        teamyearsummary.MoV = item['MoV']
+        teamyearsummary.SoS = item['SoS']
+        teamyearsummary.SRS = item['SRS']
+        teamyearsummary.SRS_Off = item['SRS_Off']
+        teamyearsummary.SRS_Def = item['SRS_Def']
+        teamyearsummary.Team_PF = item['Team_PF']
+        teamyearsummary.Team_Total_Yards = item['Team_Total_Yards']
+        teamyearsummary.Team_Plays_Offense = item['Team_Plays_Offense']
+        teamyearsummary.Team_yds_per_play_offense = item['Team_yds_per_play_offense']
+        teamyearsummary.Team_Turnovers = item['Team_Turnovers']
+        teamyearsummary.Team_Fumbles = item['Team_Fumbles']
+        teamyearsummary.Team_First_down = item['Team_First_down']
+        teamyearsummary.Team_Pass_Comp = item['Team_Pass_Comp']
+        teamyearsummary.Team_Pass_Att = item['Team_Pass_Att']
+        teamyearsummary.Team_Pass_Yds = item['Team_Pass_Yds']
+        teamyearsummary.Team_Pass_Td = item['Team_Pass_Td']
+        teamyearsummary.Team_Pass_Int = item['Team_Pass_Int']
+        teamyearsummary.Team_Pass_Net_Yds_Att = item['Team_Pass_Net_Yds_Att']
+        teamyearsummary.Team_Pass_First_Down = item['Team_Pass_First_Down']
+        teamyearsummary.Team_Rush_Att = item['Team_Rush_Att']
+        teamyearsummary.Team_Rush_Yds = item['Team_Rush_Yds']
+        teamyearsummary.Team_Rush_Tds = item['Team_Rush_Tds']
+        teamyearsummary.Team_Rush_Att = item['Team_Rush_Yds_Att']
+        teamyearsummary.Team_Rush_First_Down = item['Team_Rush_First_Down']
+        teamyearsummary.Opp_PF = item['Opp_PF']
+        teamyearsummary.Opp_Total_Yards = item['Opp_Total_Yards']
+        teamyearsummary.Opp_Plays_Offense = item['Opp_Plays_Offense']
+        teamyearsummary.Opp_yds_per_play_offense = item['Opp_yds_per_play_offense']
+        teamyearsummary.Opp_Turnovers = item['Opp_Turnovers']
+        teamyearsummary.Opp_Fumbles = item['Opp_Fumbles']
+        teamyearsummary.Opp_First_down = item['Opp_First_down']
+        teamyearsummary.Opp_Pass_Comp = item['Opp_Pass_Comp']
+        teamyearsummary.Opp_Pass_Att = item['Opp_Pass_Att']
+        teamyearsummary.Opp_Pass_Yds = item['Opp_Pass_Yds']
+        teamyearsummary.Opp_Pass_Td = item['Opp_Pass_Td']
+        teamyearsummary.Opp_Pass_Int = item['Opp_Pass_Int']
+        teamyearsummary.Opp_Pass_Net_Yds_Att = item['Opp_Pass_Net_Yds_Att']
+        teamyearsummary.Opp_Pass_First_Down = item['Opp_Pass_First_Down']
+        teamyearsummary.Opp_Rush_Att = item['Opp_Rush_Att']
+        teamyearsummary.Opp_Rush_Yds = item['Opp_Rush_Yds']
+        teamyearsummary.Opp_Rush_Tds = item['Opp_Rush_Tds']
+        teamyearsummary.Opp_Rush_Att = item['Opp_Rush_Yds_Att']
+        teamyearsummary.Opp_Rush_First_Down = item['Opp_Rush_First_Down']
         #team.name = item['Team']
         #year.year = item['Year']
 
         #year.year = item['Year']
-        #year.year = item['Draft_Year']
+        #year.year = item['Draft_Year']"""
 
         """coachingstaff.Coach = item['Coach']
         coachingstaff.Off_Coor = item['Off_Coor']
@@ -87,11 +133,11 @@ class SavestatsPipeline(object):
         weeks.Week_Def_Rush_Yards = item['Week_Def_Rush_Yards']
         weeks.Week_Def_Turnovers = item['Week_Def_Turnovers']
 
-        #starters.Starting_Position = item['Starting_Position']
-        #starters.Starting_Player = item['Starting_Player']
-        #starters.Starting_Player_Age = item['Starting_Player_Age']
-        #starters.Starting_Player_Yrs = item['Starting_Player_Yrs']
-        #starters.Starting_Player_GS = item['Starting_Player_GS']
+        starters.StartingPosition = item['Starting_Position']
+        starters.StartingPlayer = item['Starting_Player']
+        starters.StartingPlayerAge = item['Starting_Player_Age']
+        starters.StartingPlayerYrs = item['Starting_Player_Yrs']
+        starters.StartingPlayerGS = item['Starting_Player_GS']
 
         """summary.Wins = item['Wins']
         summary.Losses = item['Losses']
@@ -148,11 +194,15 @@ class SavestatsPipeline(object):
         #draft.Team_Selection = item['Draft_Team_Selection']
         #draft.Team = item['Draft_Team']
 
-        player.name = item['Starting_Player']
+        player.team = item['Team']
+        player.year = item['Year']
+        player.Player = item['Starting_Player']
         player.Position = item['Starting_Position']
         #player.name = item['Draft_Player']
         #player.Position = item['Draft_Position']
-        player.age = item['Starting_Player_Age']"""
+        player.age = item['Starting_Player_Age']
+        player.PlayerYrs = item['Starting_Player_Yrs']
+        player.GamesStarts = item['Starting_Player_GS']"""
 
         """exist_year = session.query(Year).filter_by(year=year.year).first()
         if exist_team is not None:
@@ -171,7 +221,7 @@ class SavestatsPipeline(object):
         else:"""
 
         try:
-            session.add_all([teamyearsummary, weeks])
+            session.add_all([teamyearsummary, weeks, player])
 
             session.commit()
 

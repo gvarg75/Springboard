@@ -190,7 +190,7 @@ class NFLSpider(scrapy.Spider):
                     "//*[@id='team_stats']//tr[2]//td[19]//text()").get()
                 roster_url = response.xpath(
                     "//a[contains(text(), 'Starters & Roster')]/@href").get()
-                item['Team'] = year_meta['Team']
+                """item['Team'] = year_meta['Team']
                 item['Year'] = year_meta['Year']
                 item['Wins'] = year_meta['Wins']
                 item['Losses'] = year_meta['Losses']
@@ -256,9 +256,9 @@ class NFLSpider(scrapy.Spider):
                 item['Week_Def_Pass_Yards'] = year_meta['Week_Def_Pass_Yards']
                 item['Week_Def_Rush_Yards'] = year_meta['Week_Def_Rush_Yards']
                 item['Week_Def_Turnovers'] = year_meta['Week_Def_Turnovers']
-                yield item
+                yield item"""
 
-        """yield response.follow(url=roster_url, callback=self.parse_roster, meta=year_meta, dont_filter=True)
+        yield response.follow(url=roster_url, callback=self.parse_roster, meta=year_meta, dont_filter=True)
 
     def parse_roster(self, response):
         item = NflscrapeItem()
@@ -299,7 +299,7 @@ class NFLSpider(scrapy.Spider):
                     "//a[contains(text(), 'Team Draftees')]/@href").get()
                 item['Team'] = roster_meta['Team']
                 item['Year'] = roster_meta['Year']
-                item['Wins'] = roster_meta['Wins']
+                """item['Wins'] = roster_meta['Wins']
                 item['Losses'] = roster_meta['Losses']
                 item['MoV'] = roster_meta['MoV']
                 item['SoS'] = roster_meta['SoS']
@@ -362,10 +362,10 @@ class NFLSpider(scrapy.Spider):
                 item['Week_Def_Total_Yards'] = roster_meta['Week_Def_Total_Yards']
                 item['Week_Def_Pass_Yards'] = roster_meta['Week_Def_Pass_Yards']
                 item['Week_Def_Rush_Yards'] = roster_meta['Week_Def_Rush_Yards']
-                item['Week_Def_Turnovers'] = roster_meta['Week_Def_Turnovers']
+                item['Week_Def_Turnovers'] = roster_meta['Week_Def_Turnovers']"""
                 item['Starting_Position'] = roster_meta['Starting_Position']
                 item['Starting_Player'] = roster_meta['Starting_Player']
                 item['Starting_Player_Age'] = roster_meta['Starting_Player_Age']
                 item['Starting_Player_Yrs'] = roster_meta['Starting_Player_Yrs']
                 item['Starting_Player_GS'] = roster_meta['Starting_Player_GS']
-            yield item"""
+                yield item
