@@ -8,7 +8,7 @@
 from sqlalchemy.orm import sessionmaker
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
-from .models import db_connect, create_table, TeamYearSummary, Weeks, Starters
+from .models import db_connect, create_table, TeamYearSummary, Weeks, Starters, Draft
 import logging
 
 
@@ -49,15 +49,15 @@ class SavestatsPipeline(object):
         weeks = Weeks()
         #player = Player()
         starters = Starters()
-        #draft = Draft()
+        draft = Draft()
 
-        teamyearsummary.team = item['Team']
+        """teamyearsummary.team = item['Team']
         teamyearsummary.year = item['Year']
         teamyearsummary.coach = item['Coach']
         teamyearsummary.offcoor = item['Off_Coor']
         teamyearsummary.defcoor = item['Def_Coor']
         teamyearsummary.offscheme = item['Off_Scheme']
-        teamyearsummary.defalign = item['Def_Align']
+        teamyearsummary.defalign = item['Def_Align']"""
         """teamyearsummary.Wins = item['Wins']
         teamyearsummary.Losses = item['Losses']
         teamyearsummary.MoV = item['MoV']
@@ -116,7 +116,7 @@ class SavestatsPipeline(object):
         coachingstaff.Def_Align = item['Def_Align']
         coachingstaff.Team_PF = item['Team_PF']"""
 
-        weeks.Team = item['Team']
+        """weeks.Team = item['Team']
         weeks.Year = item['Year']
         weeks.Week = item['Week']
         weeks.Week_Opp = item['Week_Opp']
@@ -131,8 +131,10 @@ class SavestatsPipeline(object):
         weeks.Week_Def_Total_Yards = item['Week_Def_Total_Yards']
         weeks.Week_Def_Pass_Yards = item['Week_Def_Pass_Yards']
         weeks.Week_Def_Rush_Yards = item['Week_Def_Rush_Yards']
-        weeks.Week_Def_Turnovers = item['Week_Def_Turnovers']
+        weeks.Week_Def_Turnovers = item['Week_Def_Turnovers']"""
 
+        starters.Team = item['Team']
+        starters.Year = item['Year']
         starters.StartingPosition = item['Starting_Position']
         starters.StartingPlayer = item['Starting_Player']
         starters.StartingPlayerAge = item['Starting_Player_Age']
@@ -183,18 +185,19 @@ class SavestatsPipeline(object):
         summary.Opp_Rush_Yds = item['Opp_Rush_Yds']
         summary.Opp_Rush_Tds = item['Opp_Rush_Tds']
         summary.Opp_Rush_Att = item['Opp_Rush_Yds_Att']
-        summary.Opp_Rush_First_Down = item['Opp_Rush_First_Down']
+        summary.Opp_Rush_First_Down = item['Opp_Rush_First_Down']"""
 
-        #draft.Year = item['Draft_Year']
-        #draft.Round = item['Draft_Round']
-        #draft.Pick = item['Draft_Pick']
-        #draft.Drafted_Player = item['Draft_Player']
-        #draft.Draft_Position = item['Draft_Position']
-        #draft.Draft_School = item['Draft_School']
-        #draft.Team_Selection = item['Draft_Team_Selection']
-        #draft.Team = item['Draft_Team']
 
-        player.team = item['Team']
+        draft.Team = item['Team']
+        draft.Year = item['Draft_Year']
+        draft.Draft_Round = item['Draft_Round']
+        draft.Draft_Pick = item['Draft_Pick']
+        draft.Draft_Player = item['Draft_Player']
+        draft.Draft_Position = item['Draft_Position']
+        draft.Draft_School = item['Draft_School']
+        draft.Draft_Team_Selection = item['Draft_Team_Selection']
+
+        """player.team = item['Team']
         player.year = item['Year']
         player.Player = item['Starting_Player']
         player.Position = item['Starting_Position']
@@ -221,7 +224,7 @@ class SavestatsPipeline(object):
         else:"""
 
         try:
-            session.add_all([teamyearsummary, weeks, player])
+            session.add(draft)
 
             session.commit()
 

@@ -255,8 +255,8 @@ class NFLSpider(scrapy.Spider):
                 item['Week_Def_Total_Yards'] = year_meta['Week_Def_Total_Yards']
                 item['Week_Def_Pass_Yards'] = year_meta['Week_Def_Pass_Yards']
                 item['Week_Def_Rush_Yards'] = year_meta['Week_Def_Rush_Yards']
-                item['Week_Def_Turnovers'] = year_meta['Week_Def_Turnovers']
-                yield item"""
+                item['Week_Def_Turnovers'] = year_meta['Week_Def_Turnovers']"""
+                #yield item
 
         yield response.follow(url=roster_url, callback=self.parse_roster, meta=year_meta, dont_filter=True)
 
@@ -362,10 +362,42 @@ class NFLSpider(scrapy.Spider):
                 item['Week_Def_Total_Yards'] = roster_meta['Week_Def_Total_Yards']
                 item['Week_Def_Pass_Yards'] = roster_meta['Week_Def_Pass_Yards']
                 item['Week_Def_Rush_Yards'] = roster_meta['Week_Def_Rush_Yards']
-                item['Week_Def_Turnovers'] = roster_meta['Week_Def_Turnovers']"""
+                item['Week_Def_Turnovers'] = roster_meta['Week_Def_Turnovers']
                 item['Starting_Position'] = roster_meta['Starting_Position']
                 item['Starting_Player'] = roster_meta['Starting_Player']
                 item['Starting_Player_Age'] = roster_meta['Starting_Player_Age']
                 item['Starting_Player_Yrs'] = roster_meta['Starting_Player_Yrs']
                 item['Starting_Player_GS'] = roster_meta['Starting_Player_GS']
-                yield item
+                yield item"""
+    
+    def parse_draft(self, response):
+        item = NflscrapeItem()
+        full_draft_meta = response.request.meta
+        rem_list = ['depth', 'download_timeout',
+                    'download_slot', 'download_latency']
+        draft_meta = dict(
+            [(key, val) for key, val in full_draft_meta.items() if key not in rem_list])
+        rows = response.xpath("//table[@id='draft']//tbody//tr")
+        for idx,row in enumerate(rows):
+            draft_meta['Draft_Round'] = row.xpath(
+                        ".//th[@data-stat='draft_round']//text()").get()
+            draft_meta['Draft_Player'] = row.xpath(
+                        ".//td[@data-stat='player']//text()").get()
+            draft_meta['Draft_Pick'] = row.xpath(
+                        ".//td[@data-stat='draft_pick']//text()").get()
+            draft_meta['Draft_Position'] = row.xpath(
+                        ".//td[@data-stat='pos']//text()").get()
+            draft_meta['Draft_School'] = row.xpath(
+                        ".//td[@data-stat='college_id']//text()").get()
+            draft_meta['Draft_Team_Selection'] = idx
+
+            item['Year'] = year_meta['Year']
+            item['Wins'] = year_meta['Wins']
+            item['Draft_Round'] = draft_meta
+            item['Draft_Pick'] = draft_meta['Draft_Pick']
+            item['Draft_Player'] = draft_meta['Draft_Player']
+            item['Draft_Position'] = draft_meta['Draft_Position']
+            item['Draft_School'] = draft_meta['Draft_School']
+            item['Draft_Team_Selection'] = draft_meta['Draft_Team_Selection']
+
+

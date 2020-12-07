@@ -43,6 +43,58 @@ class TeamYearSummary(Base):
     defcoor = Column('defcoor', String(35))
     offscheme = Column('offscheme', String(35))
     defalign = Column('defalign', String(35))
+
+class Weeks(Base):
+    __tablename__ = 'weeks'
+    __table_args__ = (UniqueConstraint(
+        'Team', 'Year', 'Week', sqlite_on_conflict='IGNORE'),)
+    id = Column(Integer, primary_key=True)
+    Team = Column('Team', String(35))
+    Year = Column('Year', Integer)
+    Week = Column('Week', String(35))
+    WeekOpp = ('Week_Opp', String(35))
+    Week_Points_Scored = Column('Week_Points_Scored', Integer)
+    Week_Points_Allowed = Column('Week_Points_Allowed', Integer)
+    Week_First_Downs = Column('Week_First_Downs', Integer)
+    Week_Total_Off_Yards = Column('Week_Total_Off_Yards', Integer)
+    Week_Pass_Yards = Column('Week_Pass_Yards', Integer)
+    Week_Rush_Yards = Column('Week_Rush_Yards', Integer)
+    Week_Off_Turnovers = Column('Week_Off_Turnovers', Integer)
+    Week_Def_First_Downs = Column('Week_Def_First_Downs', Integer)
+    Week_Def_Total_Yards = Column('Week_Def_Total_Yards', Integer)
+    Week_Def_Pass_Yards = Column('Week_Def_Pass_Yards', Integer)
+    Week_Def_Rush_Yards = Column('Week_Def_Rush_Yards', Integer)
+    Week_Def_Turnovers = Column('Week_Def_Turnovers', Integer)
+
+class Starters(Base):
+    __tablename__ = 'starters'
+    __table_args__ = (UniqueConstraint(
+        'Team', 'Year', 'StartingPlayer', sqlite_on_conflict='IGNORE'),)
+    id = Column(Integer, primary_key=True)
+    Team = Column('Team', String(35))
+    Year = Column('Year', Integer)
+    StartingPlayer = Column('StartingPlayer', String(50))
+    StartingPlayerAge = Column('StartingPlayerAge', Integer)
+    StartingPosition = Column('StartingPosition', String(50))
+    StartingPlayerYrs = Column('StartingPlayerYrs', Integer)
+    StartingPlayerGS = Column('StartingPlayerGS', Integer)
+    
+class Draft(Base):
+    __tablename__ = 'draft'
+    __table_args__ = (UniqueConstraint(
+        'Team', 'Year', sqlite_on_conflict='IGNORE'),)
+    id = Column(Integer, primary_key=True)
+    Team = Column('Team', String(35))
+    Year = Column('Year', Integer)
+    Draft_Player = Column(Column('Draft_Player'), String(35))
+    Draft_Round = Column('Draft_Round', Integer)
+    Draft_Pick = Column('Draft_Pick', Integer)
+    Draft_Position = Column('Draft_Position', String(35))
+    Draft_School = Column('Draft_School', String(35))
+    Draft_Team_Selection = Column('Draft_Team_Selection', Integer)
+    Draft_Team = Column('Draft_Team', String(35))
+    
+    
     """Wins = Column('Wins', Integer)
     Losses = Column('Losses', Integer)
     MoV = Column('MoV', Integer)
@@ -89,29 +141,6 @@ class TeamYearSummary(Base):
     Opp_Rush_Tds = Column('Opp_Rush_Tds', Integer)
     Opp_Rush_Yds_Att = Column('Opp_Rush_Yds_Att', Integer)
     Opp_Rush_First_Down = Column('Opp_Rush_First_Down', Integer)"""
-
-
-class Weeks(Base):
-    __tablename__ = 'weeks'
-    __table_args__ = (UniqueConstraint(
-        'Team', 'Year', 'Week', sqlite_on_conflict='IGNORE'),)
-    id = Column(Integer, primary_key=True)
-    Team = Column('Team', String(35))
-    Year = Column('Year', Integer)
-    Week = Column('Week', String(35))
-    WeekOpp = ('Week_Opp', String(35))
-    Week_Points_Scored = Column('Week_Points_Scored', Integer)
-    Week_Points_Allowed = Column('Week_Points_Allowed', Integer)
-    Week_First_Downs = Column('Week_First_Downs', Integer)
-    Week_Total_Off_Yards = Column('Week_Total_Off_Yards', Integer)
-    Week_Pass_Yards = Column('Week_Pass_Yards', Integer)
-    Week_Rush_Yards = Column('Week_Rush_Yards', Integer)
-    Week_Off_Turnovers = Column('Week_Off_Turnovers', Integer)
-    Week_Def_First_Downs = Column('Week_Def_First_Downs', Integer)
-    Week_Def_Total_Yards = Column('Week_Def_Total_Yards', Integer)
-    Week_Def_Pass_Yards = Column('Week_Def_Pass_Yards', Integer)
-    Week_Def_Rush_Yards = Column('Week_Def_Rush_Yards', Integer)
-    Week_Def_Turnovers = Column('Week_Def_Turnovers', Integer)
 
 
 """class Team(Base):
@@ -214,28 +243,4 @@ class Summary(Base):
     # draft = relationship("Draft")"""
 
 
-class Starters(Base):
-    __tablename__ = 'starters'
-    __table_args__ = (UniqueConstraint(
-        'Team', 'Year', 'StartingPlayer', sqlite_on_conflict='IGNORE'),)
-    id = Column(Integer, primary_key=True)
-    Team = Column('Team', String(35))
-    Year = Column('Year', Integer)
-    StartingPlayer = Column('StartingPlayer', String(50))
-    StartingPlayerAge = Column('StartingPlayerAge', Integer)
-    StartingPosition = Column('StartingPosition', String(50))
-    StartingPlayerYrs = Column('StartingPlayerYrs', Integer)
-    StartingPlayerGS = Column('StartingPlayerGS', Integer)
 
-
-"""class Draft(Base):
-    __tablename__ = 'draft'
-    id = Column(Integer, primary_key=True)
-    year_id = Column(Integer, ForeignKey('year.id'))
-    Draft_Player = Column(Integer, ForeignKey('player.id'))
-    Draft_Round = Column('Draft_Round', Integer)
-    Draft_Pick = Column('Draft_Pick', Integer)
-    Draft_Position = Column('Draft_Position', String(35))
-    Draft_School = Column('Draft_School', String(35))
-    Draft_Team_Selection = Column('Draft_Team_Selection', Integer)
-    Draft_Team = Column('Draft_Team', String(35))"""
