@@ -190,6 +190,8 @@ class NFLSpider(scrapy.Spider):
                     "//*[@id='team_stats']//tr[2]//td[19]//text()").get()
                 roster_url = response.xpath(
                     "//a[contains(text(), 'Starters & Roster')]/@href").get()
+                draft_url = response.xpath(
+                    "//a[contains(text(), 'Team Draftees')]/@href").get()
                 """item['Team'] = year_meta['Team']
                 item['Year'] = year_meta['Year']
                 item['Wins'] = year_meta['Wins']
@@ -258,7 +260,7 @@ class NFLSpider(scrapy.Spider):
                 item['Week_Def_Turnovers'] = year_meta['Week_Def_Turnovers']"""
                 #yield item
 
-        yield response.follow(url=roster_url, callback=self.parse_roster, meta=year_meta, dont_filter=True)
+        yield response.follow(url=draft_url, callback=self.parse_draft, meta=year_meta, dont_filter=True)
 
     def parse_roster(self, response):
         item = NflscrapeItem()
@@ -297,9 +299,9 @@ class NFLSpider(scrapy.Spider):
                     ".//td[@data-stat='gs']//text()").get()
                 draft_url = response.xpath(
                     "//a[contains(text(), 'Team Draftees')]/@href").get()
-                item['Team'] = roster_meta['Team']
+                """item['Team'] = roster_meta['Team']
                 item['Year'] = roster_meta['Year']
-                """item['Wins'] = roster_meta['Wins']
+                item['Wins'] = roster_meta['Wins']
                 item['Losses'] = roster_meta['Losses']
                 item['MoV'] = roster_meta['MoV']
                 item['SoS'] = roster_meta['SoS']
@@ -385,19 +387,33 @@ class NFLSpider(scrapy.Spider):
                         ".//td[@data-stat='player']//text()").get()
             draft_meta['Draft_Pick'] = row.xpath(
                         ".//td[@data-stat='draft_pick']//text()").get()
-            draft_meta['Draft_Position'] = row.xpath(
-                        ".//td[@data-stat='pos']//text()").get()
+            if row.xpath(".//th[@data-stat='pos']//text()").get() in ['CB', 'DB', 'LCB', 'RCB', 'S', 'SS', 'FS']:
+                    draft_meta['Draft_Position'] = 'DB'
+            elif row.xpath(".//td[@data-stat='pos']//text()").get() in ['C', 'OL', 'G', 'T']:
+                draft_meta['Draft_Position'] = 'OL'
+            elif row.xpath(".//td[@data-stat='pos']//text()").get() in ['DE', 'LDE', 'RDE']:
+                draft_meta['Draft_Position'] = 'DE'
+            elif row.xpath(".//td[@data-stat='pos']//text()").get() in ['DT', 'LDT', 'RDT', 'NT']:
+                draft_meta['Draft_Position'] = 'DT'
+            elif row.xpath(".//td[@data-stat='pos']//text()").get() in ['FB', 'RB']:
+                draft_meta['Draft_Position'] = 'RB'
+            elif row.xpath(".//td[@data-stat='pos']//text()").get() in ['LB', 'LLB', 'MLB', 'RLB', 'LOLB', 'LILB', 'RILB', 'ROLB', 'OLB']:
+                draft_meta['Draft_Position'] = 'LB'
+            else:
+                draft_meta['Draft_Position'] = row.xpath(
+                    ".//td[@data-stat='pos']//text()").get()
             draft_meta['Draft_School'] = row.xpath(
                         ".//td[@data-stat='college_id']//text()").get()
-            draft_meta['Draft_Team_Selection'] = idx
+            draft_meta['Draft_Team_Selection'] = (idx +1)
 
-            item['Year'] = year_meta['Year']
-            item['Wins'] = year_meta['Wins']
-            item['Draft_Round'] = draft_meta
+            item['Year'] = (int(draft_meta['Year']) - 1)
+            item['Team'] = draft_meta['Team']
+            item['Draft_Round'] = draft_meta['Draft_Round']
             item['Draft_Pick'] = draft_meta['Draft_Pick']
             item['Draft_Player'] = draft_meta['Draft_Player']
             item['Draft_Position'] = draft_meta['Draft_Position']
             item['Draft_School'] = draft_meta['Draft_School']
             item['Draft_Team_Selection'] = draft_meta['Draft_Team_Selection']
+            yield item
 
 

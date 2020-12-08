@@ -82,17 +82,16 @@ class Starters(Base):
 class Draft(Base):
     __tablename__ = 'draft'
     __table_args__ = (UniqueConstraint(
-        'Team', 'Year', sqlite_on_conflict='IGNORE'),)
+        'Team', 'Year','DraftPlayer', sqlite_on_conflict='IGNORE'),)
     id = Column(Integer, primary_key=True)
     Team = Column('Team', String(35))
     Year = Column('Year', Integer)
-    Draft_Player = Column(Column('Draft_Player'), String(35))
-    Draft_Round = Column('Draft_Round', Integer)
-    Draft_Pick = Column('Draft_Pick', Integer)
-    Draft_Position = Column('Draft_Position', String(35))
-    Draft_School = Column('Draft_School', String(35))
-    Draft_Team_Selection = Column('Draft_Team_Selection', Integer)
-    Draft_Team = Column('Draft_Team', String(35))
+    DraftRound = Column('DraftRound', Integer)
+    DraftPick = Column('DraftPick', Integer)
+    DraftPlayer = Column('DraftPlayer', String(35))
+    DraftPosition = Column('DraftPosition', String(35))
+    DraftSchool = Column('DraftSchool', String(35))
+    DraftTeamSelection = Column('DraftTeamSelection', Integer)
     
     
     """Wins = Column('Wins', Integer)

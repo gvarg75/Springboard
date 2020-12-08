@@ -84,5 +84,5 @@ class NflscrapeItem(scrapy.Item):
     Draft_Position = scrapy.Field()
     Draft_School = scrapy.Field()
     Draft_Team_Selection = scrapy.Field()
-    Draft_Year = scrapy.Field()
-    Draft_Team = scrapy.Field()
+    #Draft_Year = scrapy.Field()
+    #Draft_Team = scrapy.Field()

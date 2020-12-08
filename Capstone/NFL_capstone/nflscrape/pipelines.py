@@ -133,14 +133,23 @@ class SavestatsPipeline(object):
         weeks.Week_Def_Rush_Yards = item['Week_Def_Rush_Yards']
         weeks.Week_Def_Turnovers = item['Week_Def_Turnovers']"""
 
-        starters.Team = item['Team']
+        """starters.Team = item['Team']
         starters.Year = item['Year']
         starters.StartingPosition = item['Starting_Position']
         starters.StartingPlayer = item['Starting_Player']
         starters.StartingPlayerAge = item['Starting_Player_Age']
         starters.StartingPlayerYrs = item['Starting_Player_Yrs']
-        starters.StartingPlayerGS = item['Starting_Player_GS']
-
+        starters.StartingPlayerGS = item['Starting_Player_GS']"""
+        
+        draft.Team = item['Team']
+        draft.Year = item['Year']
+        draft.DraftRound = item['Draft_Round']
+        draft.DraftPick = item['Draft_Pick']
+        draft.DraftPlayer = item['Draft_Player']
+        draft.DraftPosition = item['Draft_Position']
+        draft.DraftSchool = item['Draft_School']
+        draft.DraftTeamSelection = item['Draft_Team_Selection']
+        
         """summary.Wins = item['Wins']
         summary.Losses = item['Losses']
         summary.MoV = item['MoV']
@@ -188,14 +197,7 @@ class SavestatsPipeline(object):
         summary.Opp_Rush_First_Down = item['Opp_Rush_First_Down']"""
 
 
-        draft.Team = item['Team']
-        draft.Year = item['Draft_Year']
-        draft.Draft_Round = item['Draft_Round']
-        draft.Draft_Pick = item['Draft_Pick']
-        draft.Draft_Player = item['Draft_Player']
-        draft.Draft_Position = item['Draft_Position']
-        draft.Draft_School = item['Draft_School']
-        draft.Draft_Team_Selection = item['Draft_Team_Selection']
+
 
         """player.team = item['Team']
         player.year = item['Year']
