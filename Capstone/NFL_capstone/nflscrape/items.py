@@ -59,6 +59,8 @@ class NflscrapeItem(scrapy.Item):
     Opp_Rush_Tds = scrapy.Field()
     Opp_Rush_Yds_Att = scrapy.Field()
     Opp_Rush_First_Down = scrapy.Field()
+    Team_Score_Percent = scrapy.Field()
+    Opp_Score_Percent = scrapy.Field()
     Week = scrapy.Field()
     Week_Opp = scrapy.Field()
     Week_Points_Scored = scrapy.Field()

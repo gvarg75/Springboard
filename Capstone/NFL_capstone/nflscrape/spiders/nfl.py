@@ -118,7 +118,7 @@ class NFLSpider(scrapy.Spider):
                 year_meta['Team_Plays_Offense'] = response.xpath(
                     "//*[@id='team_stats']//tr[1]//td[3]//text()").get()
                 year_meta['Team_yds_per_play_offense'] = response.xpath(
-                    "//*[@id='team_stats']//tr[4]//td[1]//text()").get()
+                    "//*[@id='team_stats']//tr[1]//td[4]//text()").get()
                 year_meta['Team_Turnovers'] = response.xpath(
                     "//*[@id='team_stats']//tr[1]//td[5]//text()").get()
                 year_meta['Team_Fumbles'] = response.xpath(
@@ -149,6 +149,7 @@ class NFLSpider(scrapy.Spider):
                     "//*[@id='team_stats']//tr[1]//td[18]//text()").get()
                 year_meta['Team_Rush_First_Down'] = response.xpath(
                     "//*[@id='team_stats']//tr[1]//td[19]//text()").get()
+                year_meta['Team_Score_Per'] = response.xpath("//*[@id='team_stats']//tr[1]//td[25]//text()").get()
 
                 year_meta['Opp_PF'] = response.xpath(
                     "//*[@id='team_stats']//tr[2]//td[1]//text()").get()
@@ -157,7 +158,7 @@ class NFLSpider(scrapy.Spider):
                 year_meta['Opp_Plays_Offense'] = response.xpath(
                     "//*[@id='team_stats']//tr[2]//td[3]//text()").get()
                 year_meta['Opp_yds_per_play_offense'] = response.xpath(
-                    "//*[@id='team_stats']//tr[4]//td[1]//text()").get()
+                    "//*[@id='team_stats']//tr[2]//td[4]//text()").get()
                 year_meta['Opp_Turnovers'] = response.xpath(
                     "//*[@id='team_stats']//tr[2]//td[5]//text()").get()
                 year_meta['Opp_Fumbles'] = response.xpath(
@@ -188,11 +189,12 @@ class NFLSpider(scrapy.Spider):
                     "//*[@id='team_stats']//tr[2]//td[18]//text()").get()
                 year_meta['Opp_Rush_First_Down'] = response.xpath(
                     "//*[@id='team_stats']//tr[2]//td[19]//text()").get()
+                year_meta['Opp_Score_Per'] = response.xpath("//*[@id='team_stats']//tr[2]//td[25]//text()").get()
                 roster_url = response.xpath(
                     "//a[contains(text(), 'Starters & Roster')]/@href").get()
                 draft_url = response.xpath(
                     "//a[contains(text(), 'Team Draftees')]/@href").get()
-                """item['Team'] = year_meta['Team']
+                item['Team'] = year_meta['Team']
                 item['Year'] = year_meta['Year']
                 item['Wins'] = year_meta['Wins']
                 item['Losses'] = year_meta['Losses']
@@ -225,6 +227,7 @@ class NFLSpider(scrapy.Spider):
                 item['Team_Rush_Tds'] = year_meta['Team_Rush_Tds']
                 item['Team_Rush_Yds_Att'] = year_meta['Team_Rush_Yds_Att']
                 item['Team_Rush_First_Down'] = year_meta['Team_Rush_First_Down']
+                item['Team_Score_Percent'] = year_meta['Team_Score_Per']
                 item['Opp_PF'] = year_meta['Opp_PF']
                 item['Opp_Total_Yards'] = year_meta['Opp_Total_Yards']
                 item['Opp_Plays_Offense'] = year_meta['Opp_Plays_Offense']
@@ -257,10 +260,11 @@ class NFLSpider(scrapy.Spider):
                 item['Week_Def_Total_Yards'] = year_meta['Week_Def_Total_Yards']
                 item['Week_Def_Pass_Yards'] = year_meta['Week_Def_Pass_Yards']
                 item['Week_Def_Rush_Yards'] = year_meta['Week_Def_Rush_Yards']
-                item['Week_Def_Turnovers'] = year_meta['Week_Def_Turnovers']"""
-                #yield item
+                item['Week_Def_Turnovers'] = year_meta['Week_Def_Turnovers']
+                item['Opp_Score_Percent'] = year_meta['Opp_Score_Per']
+                yield item
 
-        yield response.follow(url=draft_url, callback=self.parse_draft, meta=year_meta, dont_filter=True)
+        """yield response.follow(url=draft_url, callback=self.parse_draft, meta=year_meta, dont_filter=True)
 
     def parse_roster(self, response):
         item = NflscrapeItem()
@@ -299,7 +303,7 @@ class NFLSpider(scrapy.Spider):
                     ".//td[@data-stat='gs']//text()").get()
                 draft_url = response.xpath(
                     "//a[contains(text(), 'Team Draftees')]/@href").get()
-                """item['Team'] = roster_meta['Team']
+                item['Team'] = roster_meta['Team']
                 item['Year'] = roster_meta['Year']
                 item['Wins'] = roster_meta['Wins']
                 item['Losses'] = roster_meta['Losses']
@@ -370,7 +374,7 @@ class NFLSpider(scrapy.Spider):
                 item['Starting_Player_Age'] = roster_meta['Starting_Player_Age']
                 item['Starting_Player_Yrs'] = roster_meta['Starting_Player_Yrs']
                 item['Starting_Player_GS'] = roster_meta['Starting_Player_GS']
-                yield item"""
+                yield item
     
     def parse_draft(self, response):
         item = NflscrapeItem()
@@ -414,6 +418,6 @@ class NFLSpider(scrapy.Spider):
             item['Draft_Position'] = draft_meta['Draft_Position']
             item['Draft_School'] = draft_meta['Draft_School']
             item['Draft_Team_Selection'] = draft_meta['Draft_Team_Selection']
-            yield item
+            yield item"""
 
 

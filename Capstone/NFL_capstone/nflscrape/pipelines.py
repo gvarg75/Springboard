@@ -8,7 +8,7 @@
 from sqlalchemy.orm import sessionmaker
 from itemadapter import ItemAdapter
 from scrapy.exceptions import DropItem
-from .models import db_connect, create_table, TeamYearSummary, Weeks, Starters, Draft
+from .models import db_connect, create_table, TeamYearSummary
 import logging
 
 
@@ -46,19 +46,19 @@ class SavestatsPipeline(object):
         #year = Year()
         #coachingstaff = Coachingstaff()
         #summary = Summary()
-        weeks = Weeks()
+        #weeks = Weeks()
         #player = Player()
-        starters = Starters()
-        draft = Draft()
+        #starters = Starters()
+        #draft = Draft()
 
-        """teamyearsummary.team = item['Team']
+        teamyearsummary.team = item['Team']
         teamyearsummary.year = item['Year']
         teamyearsummary.coach = item['Coach']
         teamyearsummary.offcoor = item['Off_Coor']
         teamyearsummary.defcoor = item['Def_Coor']
         teamyearsummary.offscheme = item['Off_Scheme']
-        teamyearsummary.defalign = item['Def_Align']"""
-        """teamyearsummary.Wins = item['Wins']
+        teamyearsummary.defalign = item['Def_Align']
+        teamyearsummary.Wins = item['Wins']
         teamyearsummary.Losses = item['Losses']
         teamyearsummary.MoV = item['MoV']
         teamyearsummary.SoS = item['SoS']
@@ -82,7 +82,7 @@ class SavestatsPipeline(object):
         teamyearsummary.Team_Rush_Att = item['Team_Rush_Att']
         teamyearsummary.Team_Rush_Yds = item['Team_Rush_Yds']
         teamyearsummary.Team_Rush_Tds = item['Team_Rush_Tds']
-        teamyearsummary.Team_Rush_Att = item['Team_Rush_Yds_Att']
+        teamyearsummary.Team_Rush_Yds_Att = item['Team_Rush_Yds_Att']
         teamyearsummary.Team_Rush_First_Down = item['Team_Rush_First_Down']
         teamyearsummary.Opp_PF = item['Opp_PF']
         teamyearsummary.Opp_Total_Yards = item['Opp_Total_Yards']
@@ -101,8 +101,10 @@ class SavestatsPipeline(object):
         teamyearsummary.Opp_Rush_Att = item['Opp_Rush_Att']
         teamyearsummary.Opp_Rush_Yds = item['Opp_Rush_Yds']
         teamyearsummary.Opp_Rush_Tds = item['Opp_Rush_Tds']
-        teamyearsummary.Opp_Rush_Att = item['Opp_Rush_Yds_Att']
+        teamyearsummary.Opp_Rush_Yds_Att = item['Opp_Rush_Yds_Att']
         teamyearsummary.Opp_Rush_First_Down = item['Opp_Rush_First_Down']
+        teamyearsummary.Team_Score_Percent = item['Team_Score_Percent']
+        teamyearsummary.Opp_Score_Percent = item['Opp_Score_Percent']
         #team.name = item['Team']
         #year.year = item['Year']
 
@@ -139,7 +141,7 @@ class SavestatsPipeline(object):
         starters.StartingPlayer = item['Starting_Player']
         starters.StartingPlayerAge = item['Starting_Player_Age']
         starters.StartingPlayerYrs = item['Starting_Player_Yrs']
-        starters.StartingPlayerGS = item['Starting_Player_GS']"""
+        starters.StartingPlayerGS = item['Starting_Player_GS']
         
         draft.Team = item['Team']
         draft.Year = item['Year']
@@ -150,7 +152,7 @@ class SavestatsPipeline(object):
         draft.DraftSchool = item['Draft_School']
         draft.DraftTeamSelection = item['Draft_Team_Selection']
         
-        """summary.Wins = item['Wins']
+        summary.Wins = item['Wins']
         summary.Losses = item['Losses']
         summary.MoV = item['MoV']
         summary.SoS = item['SoS']
@@ -209,24 +211,8 @@ class SavestatsPipeline(object):
         player.PlayerYrs = item['Starting_Player_Yrs']
         player.GamesStarts = item['Starting_Player_GS']"""
 
-        """exist_year = session.query(Year).filter_by(year=year.year).first()
-        if exist_team is not None:
-            team.year = exist_team
-        else:
-            team.year = year
-
-        exist_ = session.query().filter_by().Opp_First_down
-        if exist_ is not None:
-            = exist_
-        else:
-        
-        exist_ = session.query().filter_by().Opp_First_down
-        if exist_ is not None:
-            = exist_
-        else:"""
-
         try:
-            session.add(draft)
+            session.add(teamyearsummary)
 
             session.commit()
 
