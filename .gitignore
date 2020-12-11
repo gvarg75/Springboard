@@ -5,7 +5,7 @@ Unit 4 Challenge - Tier 2.ipynb
 env/
 .gitignore
 Springboard.code-workspace
-.DS-Store
+.DS_Store
 Springboard Decision Tree Specialty Coffee Case Study - Tier 1.ipynb
 Springboard Decision Tree Specialty Coffee Case Study - Tier 2.ipynb
 Pipfile.lock
