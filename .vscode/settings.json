@@ -1,6 +1,6 @@
 {
 <<<<<<< HEAD
-    "python.pythonPath": "/opt/anaconda3/bin/python",
+    "python.pythonPath": "C:\Users\Gvargas\anaconda3\envs\Springboard\python.exe",
 =======
 >>>>>>> 459c05b88f982a7943d5361af7f98fea40d951a0
     "python.linting.pylintEnabled": true,
