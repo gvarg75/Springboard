@@ -9,4 +9,9 @@ Springboard.code-workspace
 Springboard Decision Tree Specialty Coffee Case Study - Tier 1.ipynb
 Springboard Decision Tree Specialty Coffee Case Study - Tier 2.ipynb
 Pipfile.lock
+<<<<<<< HEAD
 Advanced_SQL
+=======
+best_model.sav
+check_best_model.sav
+>>>>>>> 8c6c76c494f6c12c545bb9cd263bd4b475e89d7c
